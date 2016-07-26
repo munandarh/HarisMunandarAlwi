@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<conio.h>
+#include<iostream.h>
+main()
+{
+struct datamhs	
+{
+char nim[10];
+char nama[25];
+};
+struct datanilai
+
+{
+float nilai1;
+float nilai2;	
+};
+struct 
+{
+struct datamhs mhs;
+struct datanilai nil;
+} nilai;
+
+printf("- Insert Data Mahasiswa -\n");
+cout<<endl;
+cout<<"Masukan NIM Mahasiswa = "; cin>>nilai.mhs.nim;
+cout<<"Masukan Nama Mahasiswa = "; cin>>nilai.mhs.nama;
+cout<<"Masukan Nilai UTS = "; cin>>nilai.nil.nilai1;
+cout<<"Masukan Nilai UAS = "; cin>>nilai.nil.nilai2;
+cout<<endl;
+
+printf("- Data Mahasiswa -\n");
+cout<<endl;
+cout<<"NIM = "<<nilai.mhs.nim<<endl;
+cout<<"Nama = "<<nilai.mhs.nama<<endl;
+cout<<"Nilai UTS = "<<nilai.nil.nilai1<<endl;
+cout<<"Nilai UAS = "<<nilai.nil.nilai2<<endl;
+cout<<endl;
+
+getch();
+return(0);
+}
