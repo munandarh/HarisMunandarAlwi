@@ -1,0 +1,172 @@
+#include<iostream>
+#include<cstdlib>
+#include<string>
+#include<cstdio>
+using namespace std;
+const int TABLE_SIZE = 128;
+
+class HashNode
+{
+    public:
+    int key;
+	int value;
+	HashNode* next;
+        HashNode(int key, int value)
+        {
+            this->key = key;
+	    this->value = value;
+	    this->next = NULL;
+        }
+};
+
+class HashMap
+{
+    private:
+        HashNode** htable;
+    public:
+        HashMap()
+        {
+            htable = new HashNode*[TABLE_SIZE];
+            for (int i = 0; i < TABLE_SIZE; i++)
+                htable[i] = NULL;
+        }
+        ~HashMap()
+        {
+            for (int i = 0; i < TABLE_SIZE; ++i)
+	    {
+                HashNode* entry = htable[i];
+                while (entry != NULL)
+	        {
+                    HashNode* prev = entry;
+                    entry = entry->next;
+                    delete prev;
+                }
+            }
+            delete[] htable;
+        }
+        
+        int HashFunc(int key)
+        {
+            return key % TABLE_SIZE;
+        }
+ 
+        /* Insert */
+        void Insert(int key, int value)
+        {
+            int hash_val = HashFunc(key);
+            HashNode* prev = NULL;
+            HashNode* entry = htable[hash_val];
+            while (entry != NULL)
+            {
+                prev = entry;
+                entry = entry->next;
+            }
+            if (entry == NULL)
+            {
+                entry = new HashNode(key, value);
+                if (prev == NULL)
+	        {
+                    htable[hash_val] = entry;
+                }
+	        else
+	        {
+                    prev->next = entry;
+                }
+            }
+            else
+            {
+                entry->value = value;
+            }
+        }
+        /* Remove */
+        void Remove(int key)
+        {
+            int hash_val = HashFunc(key);
+            HashNode* entry = htable[hash_val];
+            HashNode* prev = NULL;
+            if (entry == NULL || entry->key != key)
+            {
+            	cout<<"Element Tidak Ada Yang Menggunakan Kode "<<key<<endl;
+                return;
+            }
+            while (entry->next != NULL)
+	    {
+                prev = entry;
+                entry = entry->next;
+            }
+            if (prev != NULL)
+            {
+                prev->next = entry->next;
+            }
+            delete entry;
+            cout<<"Element Berhasil Di Hapus"<<endl;
+        }
+        /* Search */
+        int Search(int key)
+        {
+            bool flag = false;
+            int hash_val = HashFunc(key);
+            HashNode* entry = htable[hash_val];
+            while (entry != NULL)
+	    {
+                if (entry->key == key)
+	        {
+                    cout<<entry->value<<" ";
+                    flag = true;
+                }
+                entry = entry->next;
+            }
+            if (!flag)
+                return -1;
+        }
+};
+
+/* MENU */
+int main()
+{
+    HashMap hash;
+    int key, value;
+    int choice;
+    while (1)
+    {
+        cout<<"\n----------------------"<<endl;
+        cout<<"Hast Table Pengalamatan Terbuka"<<endl;
+        cout<<"\n----------------------"<<endl;
+        cout<<"1.Memasukan Element Ke Dalam Table"<<endl;
+        cout<<"2.Mencari Element Dengan Kode Element"<<endl;
+        cout<<"3.Menghapus Element Berdasarkan Kode"<<endl;
+        cout<<"4.Keluar Program"<<endl;
+        cout<<"Masukan Pilihan Anda : ";
+        cin>>choice;
+        switch(choice)
+        {
+        case 1:
+            cout<<"Masukan Element Yang Di inginkan : ";
+            cin>>value;
+            cout<<"Masukan Kode Untuk Element Tersebut: ";
+            cin>>key;
+            hash.Insert(key, value);
+            break;
+        case 2:
+            cout<<"Masukan Kunci Element Untuk Mencari : ";
+            cin>>key;
+            cout<<"Kode Untuk Element "<<key<<" : ";
+            if (hash.Search(key) == -1)
+            {
+	        cout<<"Tidak Ada Element Menggunakan Kode "<<key<<endl;
+	        continue;
+	    }
+            break;
+        case 3:
+            cout<<"Masukan Kode Element Tersebut Untuk Menghapus : ";
+            cin>>key;
+            hash.Remove(key);
+            break;
+        case 4:
+            exit(1);
+        default:
+           cout<<"\nEnter correct option\n";
+       }
+    }
+    return 0;
+}
